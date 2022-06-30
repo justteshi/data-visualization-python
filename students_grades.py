@@ -1,6 +1,10 @@
 # importing the modules
+from bokeh.io import curdoc
 from bokeh.plotting import figure, output_file, show
 from bokeh.models import Title
+from bokeh.models import HoverTool
+from bokeh.palettes import RdYlGn
+from bokeh.layouts import column, row
 import mysql.connector
 
 def get_students_grades():
@@ -41,29 +45,30 @@ def get_students_grades():
 
     return arr_grades
 
-print(get_students_grades())
 
 # file to save the model
-output_file("gfg.html")
-      
-# instantiating the figure object
-graph = figure(title = "Number of Students by Grades")
-graph.add_layout(Title(text="Students Count", align="center"), "left")
-graph.add_layout(Title(text="Grades", align="center"), "below")
-
-# x-coordinates to be plotted
+output_file("students_grades_graph.html")
+curdoc().theme = 'dark_minimal'
 x = [2, 3, 4, 5, 6]
-  
-# x-coordinates of the top edges
-top = get_students_grades()
-  
-# width / thickness of the bars
-width = 0.5
-  
+y = get_students_grades()
+
+# instantiating the figure object
+graph = figure(title = "Number of Students by Grades", toolbar_location=None, tools=[HoverTool()],
+    tooltips=" @top students with Final Grade @x.",margin=(0,0,10,0))
+
+graph.add_layout(Title(text="Students Count", align="center"), "left")
+graph.add_layout(Title(text="Final Grades", align="center"), "below")
+    
+color = RdYlGn[5][::-1]
 # plotting the graph
 graph.vbar(x,
-           top = top,
-           width = width)
-  
+    top = y,
+    width = 0.5,
+    color= color
+)
+graph.y_range.start = 0
+graph.axis.minor_tick_line_color = None
+
 # displaying the model
+# show(graph)
 show(graph)
