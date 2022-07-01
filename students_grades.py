@@ -12,8 +12,8 @@ def get_students_grades():
     mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Rakiq*Salata1",
-    database="university"
+    password="",
+    database="uni"
     )
     mycursor = mydb.cursor()
 
