@@ -125,15 +125,16 @@ curdoc().theme = 'dark_minimal'
 x = [2, 3, 4, 5, 6]
 y = get_students_grades()
 
-# instantiating the figure object
-grades_graph = figure(title = "Number of students by Final grades", toolbar_location=None, tools=[HoverTool()],
-    tooltips=" @top students with Final Grade @x.",margin=(0,0,10,0))
-
+grades_graph = figure(
+    title = "Number of students by Final grades",
+    toolbar_location=None,
+    tools=[HoverTool()],
+    tooltips=" @top students with Final Grade @x.",
+    margin=(0,0,10,0)
+)
 grades_graph.add_layout(Title(text="Students Count", align="center"), "left")
 grades_graph.add_layout(Title(text="Final Grades", align="center"), "below")
-    
 color = RdYlGn[5][::-1]
-# plotting the graph
 grades_graph.vbar(x,
     top = y,
     width = 0.5,
