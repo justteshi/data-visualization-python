@@ -1,0 +1,29 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: university-analytics-mysql
+    restart: unless-stopped
+    command: --lower-case-table-names=1
+    environment:
+      MYSQL_DATABASE: university
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/scheme_creation.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./db/generate_persons.sql:/docker-entrypoint-initdb.d/02-persons.sql:ro
+      - ./db/generate_students.sql:/docker-entrypoint-initdb.d/03-students.sql:ro
+      - ./db/generate_teachers.sql:/docker-entrypoint-initdb.d/04-teachers.sql:ro
+      - ./db/generate_classes.sql:/docker-entrypoint-initdb.d/05-classes.sql:ro
+      - ./db/generate_rooms.sql:/docker-entrypoint-initdb.d/06-rooms.sql:ro
+      - ./db/generate_classes_students.sql:/docker-entrypoint-initdb.d/07-class-students.sql:ro
+      - ./db/generate_schedules.sql:/docker-entrypoint-initdb.d/08-schedules.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "test \"$$(mysql -u root -p$${MYSQL_ROOT_PASSWORD} --batch --skip-column-names --database=university -e 'SELECT COUNT(*) FROM ClassStudent' 2>/dev/null)\" = '2894'"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+
+volumes:
+  mysql_data:

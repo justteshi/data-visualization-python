@@ -6,8 +6,11 @@ university data from MySQL and uses Bokeh to produce three charts in
 
 ## Repository layout
 
-- `all.py` connects to MySQL, queries the legacy schema, builds the charts, and
-  writes/opens the HTML output.
+- `all.py` queries the legacy schema, builds the charts, and writes/opens the
+  HTML output.
+- `database.py` validates environment-based settings and creates MySQL
+  connections.
+- `.env.example` documents the local database configuration.
 - `all_charts.html` is generated output. It remains tracked for now because it
   is the only viewable snapshot that does not require a configured database.
 - `db/scheme_creation.sql` defines the seven legacy tables.
@@ -28,10 +31,47 @@ the database. After creating that database, load the files in dependency order:
 7. `db/generate_classes_students.sql`
 8. `db/generate_schedules.sql`
 
-Important: `all.py` currently connects to a database named `uni`, while the
-SQL files select `university`. This legacy mismatch is intentionally documented
-rather than changed in this baseline. The database names must refer to the same
-populated schema for the script to run.
+The SQL files select a database named `university`, which is also the database
+name used by the included Docker setup. Set `DB_NAME` to the populated schema
+that the application should query.
+
+## Database configuration
+
+Copy the safe example file to create local configuration:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` for the local MySQL installation:
+
+```dotenv
+DB_HOST=localhost
+DB_PORT=3336
+DB_NAME=university
+DB_USER=root
+DB_PASSWORD=change-me
+```
+
+All five variables must be present. `DB_PASSWORD` may be empty when the local
+MySQL account has no password. The `.env` file is ignored by Git and must not be
+committed. Environment variables already exported by the shell take precedence
+over values in `.env`.
+
+### Local MySQL with Docker
+
+The included Compose service uses `DB_PORT` and `DB_PASSWORD` from `.env` and
+loads the existing SQL files into a persistent MySQL 8.0 container. Use a
+non-empty development password and set `DB_NAME=university`, then run:
+
+```bash
+docker compose up -d
+docker compose ps
+```
+
+Initialization runs only when the `mysql_data` volume is empty. Stop the
+container with `docker compose stop`; `docker compose down` also removes the
+container but preserves the database volume.
 
 ## Python setup
 
@@ -60,6 +100,7 @@ database, so review its diff before committing it.
 
 ## Baseline constraints
 
-The current database access, SQL queries, Bokeh charts, and pinned dependency
-versions are deliberately unchanged. They should be tested against a populated
+The SQL queries, Bokeh charts, and existing pinned dependency versions are
+deliberately unchanged. `python-dotenv` is included only to load ignored local
+`.env` configuration. The application should be tested against a populated
 database before later refactoring or dependency upgrades.

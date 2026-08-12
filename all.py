@@ -9,17 +9,8 @@ from bokeh.models import ColumnDataSource, FactorRange
 from bokeh.transform import factor_cmap, cumsum
 from math import pi
 import pandas as pd
-from mysql import connector
+from database import connect_mysql
 
-
-def connect_mysql():
-    mydb = connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="uni"
-    )
-    return mydb
 
 def get_students_grades():
     arr_grades = []
