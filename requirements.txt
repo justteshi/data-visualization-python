@@ -1,3 +1,5 @@
+# Frozen legacy Python 3.9 environment. Keep versions pinned until the
+# database-backed application can be tested as part of a dependency upgrade.
 bokeh==2.4.3
 Cython==0.29.30
 Jinja2==3.1.2
