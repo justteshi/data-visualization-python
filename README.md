@@ -39,6 +39,13 @@ bind-mounted so the result is available on the host:
 docker compose exec python python all.py
 ```
 
+Generate the static analytics data for a future frontend. The resulting
+tracked file is `public/data/analytics.json` on the host:
+
+```bash
+docker compose exec python python -m src.export_data
+```
+
 Open a shell in the Python development container:
 
 ```bash
