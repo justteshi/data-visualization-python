@@ -6,8 +6,9 @@ to generate three charts in `all_charts.html`.
 ## Repository layout
 
 - `all.py` is the Python entry point and Bokeh chart generator.
-- `database.py` loads `DB_*` environment variables and creates MySQL
+- `src/database.py` loads `DB_*` environment variables and creates MySQL
   connections.
+- `src/analytics.py` contains reusable, plain-Python analytics functions.
 - `db/scheme_creation.sql` creates the seven legacy tables.
 - `db/generate_*.sql` contains the preserved seed data.
 
@@ -93,8 +94,9 @@ schema or seed records were changed. MySQL is started with
 table names with inconsistent casing. Initialization scripts run only for a new
 volume.
 
-## Legacy constraints
+## Analytics architecture
 
-The Bokeh implementation and analytics queries are intentionally unchanged.
-`database.py` already uses environment-based configuration; no broader
-database configuration refactor is included in this feature.
+`all.py` contains Bokeh presentation code only. It obtains the grade
+distribution, enrollment-by-gender/year data, and study-duration distribution
+from `src.analytics`, which returns dictionaries of plain Python values.
+Database connection configuration remains isolated in `src.database`.
