@@ -1,6 +1,7 @@
-"""MySQL connection configuration for the legacy visualization application."""
+"""MySQL connection configuration for the visualization application."""
 
 import os
+from typing import Any, Dict
 
 from dotenv import load_dotenv
 from mysql import connector
@@ -14,7 +15,7 @@ class DatabaseConnectionError(RuntimeError):
     """Raised when MySQL cannot be reached with the configured settings."""
 
 
-def _database_config():
+def _database_config() -> Dict[str, Any]:
     load_dotenv()
 
     variable_names = (
@@ -29,8 +30,7 @@ def _database_config():
 
     if missing:
         raise DatabaseConfigurationError(
-            "Missing required database environment variables: "
-            + ", ".join(missing)
+            "Missing required database environment variables: " + ", ".join(missing)
         )
 
     try:
@@ -41,9 +41,7 @@ def _database_config():
         ) from error
 
     if not 1 <= port <= 65535:
-        raise DatabaseConfigurationError(
-            "DB_PORT must be an integer between 1 and 65535."
-        )
+        raise DatabaseConfigurationError("DB_PORT must be an integer between 1 and 65535.")
 
     return {
         "host": values["DB_HOST"],

@@ -42,7 +42,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-app}
     volumes:
       - ./all.py:/app/all.py
-      - ./database.py:/app/database.py
+      - ./src:/app/src
       - ./all_charts.html:/app/all_charts.html
     command: sleep infinity
 
