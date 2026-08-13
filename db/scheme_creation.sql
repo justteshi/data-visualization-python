@@ -1,4 +1,4 @@
-USE university;
+USE uni;
 CREATE TABLE Student (
 	StudentID INT(10) PRIMARY KEY
 	,YearStart INT(4) NOT NULL

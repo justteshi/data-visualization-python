@@ -1,4 +1,4 @@
-use university;
+USE uni;
 
 
 INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (1,100,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (2,101,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (3,102,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (4,103,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (5,104,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (6,105,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (7,106,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (8,107,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (9,108,1,'Math'); INSERT INTO Room (RoomID,RoomNum,Floor,Building) VALUES (10,109,1,'Math');
