@@ -51,7 +51,7 @@ def get_student_enrollment_by_gender_and_year() -> Dict[Tuple[int, str], int]:
 
 
 def get_study_duration_distribution() -> Dict[str, int]:
-    """Return the legacy study-duration buckets used by the Bokeh pie chart."""
+    """Return the study-duration buckets used by the dashboard export."""
     connection = connect_mysql()
     cursor = connection.cursor()
     try:

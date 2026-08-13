@@ -1,8 +1,12 @@
 """Export the database-backed analytics as static JSON for a future frontend."""
 
 import json
+import sys
 from pathlib import Path
 from typing import Any, Dict
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.analytics import (
     get_grade_distribution,

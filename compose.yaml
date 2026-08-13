@@ -41,10 +41,8 @@ services:
       DB_USER: ${DB_USER:-app}
       DB_PASSWORD: ${DB_PASSWORD:-app}
     volumes:
-      - ./all.py:/app/all.py
       - ./src:/app/src
       - ./public:/app/public
-      - ./all_charts.html:/app/all_charts.html
     command: sleep infinity
 
 volumes:

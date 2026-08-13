@@ -1,14 +1,14 @@
 # University data visualizations
 
-This legacy Python application reads university data from MySQL and uses Bokeh
-to generate three charts in `all_charts.html`.
+This project reads university data from MySQL, exports static analytics JSON,
+and presents it through a Vite + Chart.js dashboard.
 
 ## Repository layout
 
-- `all.py` is the Python entry point and Bokeh chart generator.
 - `src/database.py` loads `DB_*` environment variables and creates MySQL
   connections.
 - `src/analytics.py` contains reusable, plain-Python analytics functions.
+- `src/export_data.py` generates `public/data/analytics.json`.
 - `db/scheme_creation.sql` creates the seven legacy tables.
 - `db/generate_*.sql` contains the preserved seed data.
 
@@ -32,18 +32,11 @@ container:
 docker compose ps
 ```
 
-Run the existing Bokeh application. It regenerates `all_charts.html`, which is
-bind-mounted so the result is available on the host:
-
-```bash
-docker compose exec python python all.py
-```
-
 Generate the static analytics data for a future frontend. The resulting
 tracked file is `public/data/analytics.json` on the host:
 
 ```bash
-docker compose exec python python -m src.export_data
+docker compose exec python python src/export_data.py
 ```
 
 Open a shell in the Python development container:
@@ -103,9 +96,9 @@ volume.
 
 ## Analytics architecture
 
-`all.py` contains Bokeh presentation code only. It obtains the grade
-distribution, enrollment-by-gender/year data, and study-duration distribution
-from `src.analytics`, which returns dictionaries of plain Python values.
+`src.analytics` contains the grade-distribution, enrollment-by-gender/year,
+and study-duration calculations and returns plain Python values.
+`src.export_data` serializes those results to static JSON for the dashboard.
 Database connection configuration remains isolated in `src.database`.
 
 ## Frontend development
