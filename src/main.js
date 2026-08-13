@@ -1,10 +1,10 @@
 import "./styles/main.css";
-
-const kpiPlaceholders = [
-  { label: "Student population", context: "Awaiting analytics data" },
-  { label: "Grade distribution", context: "Awaiting analytics data" },
-  { label: "Study duration", context: "Awaiting analytics data" },
-];
+import {
+  loadAnalytics,
+  renderErrorState,
+  renderKpis,
+  renderLoadingState,
+} from "./dashboard.js";
 
 const app = document.querySelector("#app");
 
@@ -36,7 +36,7 @@ app.innerHTML = `
           </div>
           <div class="data-status" id="data">
             <span class="status-dot" aria-hidden="true"></span>
-            <span>Static analytics export available</span>
+            <span id="data-status-text" aria-live="polite">Loading analytics export</span>
           </div>
         </div>
       </section>
@@ -47,21 +47,9 @@ app.innerHTML = `
             <p class="eyebrow">At a glance</p>
             <h2 id="kpi-heading">Key indicators</h2>
           </div>
-          <p>Dashboard metrics will be connected in the next frontend feature.</p>
+          <p>Summary metrics are sourced from the static analytics export.</p>
         </div>
-        <div class="kpi-grid">
-          ${kpiPlaceholders
-            .map(
-              ({ label, context }) => `
-                <article class="panel kpi-card">
-                  <p>${label}</p>
-                  <strong aria-label="Placeholder value">—</strong>
-                  <span>${context}</span>
-                </article>
-              `,
-            )
-            .join("")}
-        </div>
+        <div class="kpi-grid" id="kpi-grid" aria-live="polite"></div>
       </section>
 
       <section class="insights-section" id="insights" aria-labelledby="insights-heading">
@@ -105,3 +93,24 @@ app.innerHTML = `
     </footer>
   </div>
 `;
+
+const kpiGrid = document.querySelector("#kpi-grid");
+const dataStatus = document.querySelector("#data-status-text");
+
+async function populateDashboard() {
+  renderLoadingState(kpiGrid);
+  dataStatus.textContent = "Loading analytics export";
+
+  try {
+    const { summary } = await loadAnalytics();
+    renderKpis(kpiGrid, summary);
+    kpiGrid.removeAttribute("aria-busy");
+    dataStatus.textContent = "Analytics export loaded";
+  } catch (error) {
+    renderErrorState(kpiGrid, populateDashboard);
+    dataStatus.textContent = "Analytics export unavailable";
+    console.error(error);
+  }
+}
+
+populateDashboard();

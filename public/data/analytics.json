@@ -1,6 +1,23 @@
 {
   "summary": {
-    "totalStudents": 1002
+    "totalStudents": 1002,
+    "academicYears": {
+      "count": 15,
+      "first": 2000,
+      "last": 2014
+    },
+    "genderTotals": {
+      "M": 480,
+      "F": 522
+    },
+    "mostCommonGrade": {
+      "grade": 4,
+      "count": 635
+    },
+    "largestStudyDurationGroup": {
+      "label": "more than 4 years",
+      "count": 599
+    }
   },
   "gradeDistribution": [
     {
