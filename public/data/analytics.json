@@ -1,0 +1,197 @@
+{
+  "summary": {
+    "totalStudents": 1002
+  },
+  "gradeDistribution": [
+    {
+      "grade": 2,
+      "count": 557
+    },
+    {
+      "grade": 3,
+      "count": 553
+    },
+    {
+      "grade": 4,
+      "count": 635
+    },
+    {
+      "grade": 5,
+      "count": 551
+    },
+    {
+      "grade": 6,
+      "count": 598
+    }
+  ],
+  "studentsByGenderAndYear": [
+    {
+      "year": 2000,
+      "gender": "M",
+      "count": 20
+    },
+    {
+      "year": 2000,
+      "gender": "F",
+      "count": 16
+    },
+    {
+      "year": 2001,
+      "gender": "M",
+      "count": 17
+    },
+    {
+      "year": 2001,
+      "gender": "F",
+      "count": 24
+    },
+    {
+      "year": 2002,
+      "gender": "M",
+      "count": 13
+    },
+    {
+      "year": 2002,
+      "gender": "F",
+      "count": 17
+    },
+    {
+      "year": 2003,
+      "gender": "M",
+      "count": 13
+    },
+    {
+      "year": 2003,
+      "gender": "F",
+      "count": 13
+    },
+    {
+      "year": 2004,
+      "gender": "M",
+      "count": 16
+    },
+    {
+      "year": 2004,
+      "gender": "F",
+      "count": 13
+    },
+    {
+      "year": 2005,
+      "gender": "M",
+      "count": 28
+    },
+    {
+      "year": 2005,
+      "gender": "F",
+      "count": 32
+    },
+    {
+      "year": 2006,
+      "gender": "M",
+      "count": 24
+    },
+    {
+      "year": 2006,
+      "gender": "F",
+      "count": 33
+    },
+    {
+      "year": 2007,
+      "gender": "M",
+      "count": 39
+    },
+    {
+      "year": 2007,
+      "gender": "F",
+      "count": 46
+    },
+    {
+      "year": 2008,
+      "gender": "M",
+      "count": 54
+    },
+    {
+      "year": 2008,
+      "gender": "F",
+      "count": 45
+    },
+    {
+      "year": 2009,
+      "gender": "M",
+      "count": 44
+    },
+    {
+      "year": 2009,
+      "gender": "F",
+      "count": 40
+    },
+    {
+      "year": 2010,
+      "gender": "M",
+      "count": 49
+    },
+    {
+      "year": 2010,
+      "gender": "F",
+      "count": 60
+    },
+    {
+      "year": 2011,
+      "gender": "M",
+      "count": 44
+    },
+    {
+      "year": 2011,
+      "gender": "F",
+      "count": 62
+    },
+    {
+      "year": 2012,
+      "gender": "M",
+      "count": 47
+    },
+    {
+      "year": 2012,
+      "gender": "F",
+      "count": 42
+    },
+    {
+      "year": 2013,
+      "gender": "M",
+      "count": 51
+    },
+    {
+      "year": 2013,
+      "gender": "F",
+      "count": 59
+    },
+    {
+      "year": 2014,
+      "gender": "M",
+      "count": 21
+    },
+    {
+      "year": 2014,
+      "gender": "F",
+      "count": 20
+    }
+  ],
+  "studyDuration": [
+    {
+      "label": "1-2 years",
+      "count": 138
+    },
+    {
+      "label": "3 years",
+      "count": 123
+    },
+    {
+      "label": "4 years",
+      "count": 142
+    },
+    {
+      "label": "more than 4 years",
+      "count": 599
+    }
+  ]
+}
