@@ -30,9 +30,11 @@ export async function loadAnalytics() {
 function createKpiCard({ label, value, description }) {
   return `
     <article class="panel kpi-card">
-      <p>${label}</p>
-      <strong>${value}</strong>
-      <span>${description}</span>
+      <dl>
+        <dt>${label}</dt>
+        <dd>${value}</dd>
+      </dl>
+      <p>${description}</p>
     </article>
   `;
 }

@@ -11,6 +11,7 @@ const app = document.querySelector("#app");
 
 app.innerHTML = `
   <div class="site-shell">
+    <a class="skip-link" href="#dashboard-main">Skip to dashboard content</a>
     <header class="topbar">
       <a class="brand" href="#overview" aria-label="University Analytics home">
         <span class="brand-mark" aria-hidden="true">UA</span>
@@ -19,12 +20,12 @@ app.innerHTML = `
       <nav class="primary-nav" aria-label="Primary navigation">
         <a href="#overview">Overview</a>
         <a href="#insights">Insights</a>
-        <a href="#data">Data</a>
+        <a href="${import.meta.env.BASE_URL}data/analytics.json">Data</a>
       </nav>
-      <a class="topbar-action" href="#data">View data source</a>
+      <a class="topbar-action" href="${import.meta.env.BASE_URL}data/analytics.json">Open data export <span aria-hidden="true">↗</span></a>
     </header>
 
-    <main>
+    <main id="dashboard-main" tabindex="-1">
       <section class="hero" id="overview" aria-labelledby="page-title">
         <p class="eyebrow">University performance intelligence</p>
         <div class="hero-content">
@@ -70,8 +71,9 @@ app.innerHTML = `
               </div>
             </div>
             <div class="chart-canvas-wrap chart-canvas-wide">
-              <canvas id="enrollment-chart" role="img" aria-label="Grouped bar chart of students starting university by gender and year"></canvas>
+              <canvas id="enrollment-chart" role="img" aria-label="Grouped bar chart of students starting university by gender and year" aria-describedby="enrollment-chart-description"></canvas>
             </div>
+            <p class="chart-description" id="enrollment-chart-description">Each year contains separate bars for male and female students. Hover or focus the chart area to inspect values.</p>
           </article>
           <article class="panel chart-panel">
             <div class="panel-heading">
@@ -81,8 +83,9 @@ app.innerHTML = `
               </div>
             </div>
             <div class="chart-canvas-wrap">
-              <canvas id="grade-chart" role="img" aria-label="Bar chart of recorded final grade results"></canvas>
+              <canvas id="grade-chart" role="img" aria-label="Bar chart of recorded final grade results" aria-describedby="grade-chart-description"></canvas>
             </div>
+            <p class="chart-description" id="grade-chart-description">Final grades are displayed as discrete categories from 2 through 6.</p>
           </article>
           <article class="panel chart-panel chart-panel-duration">
             <div class="panel-heading">
@@ -92,8 +95,9 @@ app.innerHTML = `
               </div>
             </div>
             <div class="chart-canvas-wrap">
-              <canvas id="duration-chart" role="img" aria-label="Horizontal bar chart of study duration groups"></canvas>
+              <canvas id="duration-chart" role="img" aria-label="Horizontal bar chart of study duration groups" aria-describedby="duration-chart-description"></canvas>
             </div>
+            <p class="chart-description" id="duration-chart-description">The horizontal scale shows the number of students in each study-duration group.</p>
           </article>
         </div>
       </section>
@@ -108,21 +112,40 @@ app.innerHTML = `
 
 const kpiGrid = document.querySelector("#kpi-grid");
 const dataStatus = document.querySelector("#data-status-text");
+const dataStatusContainer = document.querySelector(".data-status");
+const chartGrid = document.querySelector(".chart-grid");
 
 async function populateDashboard() {
   renderLoadingState(kpiGrid);
   dataStatus.textContent = "Loading analytics export";
+  dataStatusContainer.classList.remove("is-error", "is-empty");
 
   try {
     const analytics = await loadAnalytics();
     const { summary } = analytics;
     renderKpis(kpiGrid, summary);
-    renderCharts(analytics);
+    const hasChartData = analytics.gradeDistribution.length && analytics.studentsByGenderAndYear.length && analytics.studyDuration.length;
+    if (hasChartData) {
+      renderCharts(analytics);
+    } else {
+      chartGrid.innerHTML = `
+        <div class="panel empty-state" role="status">
+          <p class="eyebrow">No chart data</p>
+          <h3>Analytics are available, but there are no chart records to display.</h3>
+          <p>Regenerate the static export after the database contains analytics data.</p>
+        </div>
+      `;
+      dataStatus.textContent = "Analytics export has no chart records";
+      dataStatusContainer.classList.add("is-empty");
+    }
     kpiGrid.removeAttribute("aria-busy");
-    dataStatus.textContent = "Analytics export loaded";
+    if (hasChartData) {
+      dataStatus.textContent = "Analytics export loaded";
+    }
   } catch (error) {
     renderErrorState(kpiGrid, populateDashboard);
     dataStatus.textContent = "Analytics export unavailable";
+    dataStatusContainer.classList.add("is-error");
     console.error(error);
   }
 }

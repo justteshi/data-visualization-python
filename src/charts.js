@@ -25,7 +25,8 @@ function sharedOptions(theme) {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 350 },
+    resizeDelay: 120,
+    animation: { duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 350 },
     plugins: {
       legend: {
         labels: { boxWidth: 10, boxHeight: 10, color: theme.muted, padding: 16 },
@@ -52,7 +53,7 @@ function cartesianScales(theme, { horizontal = false, valueLabel = "Students" } 
     border: { display: false },
   };
   const labelAxis = {
-    ticks: { color: theme.muted },
+    ticks: { color: theme.muted, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 },
     grid: { display: false },
     border: { display: false },
   };
