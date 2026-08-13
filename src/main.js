@@ -5,6 +5,7 @@ import {
   renderKpis,
   renderLoadingState,
 } from "./dashboard.js";
+import { renderCharts } from "./charts.js";
 
 const app = document.querySelector("#app");
 
@@ -58,30 +59,41 @@ app.innerHTML = `
             <p class="eyebrow">Analysis workspace</p>
             <h2 id="insights-heading">Charts and trends</h2>
           </div>
-          <p>Visual analytics will be introduced separately.</p>
+          <p>Interactive views use the same static analytics export as the summary.</p>
         </div>
         <div class="chart-grid">
           <article class="panel chart-panel chart-panel-large">
             <div class="panel-heading">
               <div>
-                <h3>Performance over time</h3>
-                <p>Reserved for the future academic-performance visualization.</p>
+                <h3>Students starting university by gender and year</h3>
+                <p>Compare enrollment counts for each year from 2000 to 2014.</p>
               </div>
-              <span class="panel-state">Planned</span>
             </div>
-            <div class="chart-placeholder" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span><span></span>
+            <div class="chart-canvas-wrap chart-canvas-wide">
+              <canvas id="enrollment-chart" role="img" aria-label="Grouped bar chart of students starting university by gender and year"></canvas>
             </div>
           </article>
           <article class="panel chart-panel">
             <div class="panel-heading">
               <div>
-                <h3>Student mix</h3>
-                <p>Reserved for a future composition view.</p>
+                <h3>Final grade distribution</h3>
+                <p>Recorded results across final grades 2 through 6.</p>
               </div>
-              <span class="panel-state">Planned</span>
             </div>
-            <div class="donut-placeholder" aria-hidden="true"><span></span></div>
+            <div class="chart-canvas-wrap">
+              <canvas id="grade-chart" role="img" aria-label="Bar chart of recorded final grade results"></canvas>
+            </div>
+          </article>
+          <article class="panel chart-panel chart-panel-duration">
+            <div class="panel-heading">
+              <div>
+                <h3>Study duration distribution</h3>
+                <p>Students grouped by time spent at university.</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="duration-chart" role="img" aria-label="Horizontal bar chart of study duration groups"></canvas>
+            </div>
           </article>
         </div>
       </section>
@@ -102,8 +114,10 @@ async function populateDashboard() {
   dataStatus.textContent = "Loading analytics export";
 
   try {
-    const { summary } = await loadAnalytics();
+    const analytics = await loadAnalytics();
+    const { summary } = analytics;
     renderKpis(kpiGrid, summary);
+    renderCharts(analytics);
     kpiGrid.removeAttribute("aria-busy");
     dataStatus.textContent = "Analytics export loaded";
   } catch (error) {
