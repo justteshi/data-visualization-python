@@ -20,9 +20,40 @@ def build_analytics_export() -> Dict[str, Any]:
     grade_distribution = get_grade_distribution()
     enrollment_by_gender_and_year = get_student_enrollment_by_gender_and_year()
     study_duration = get_study_duration_distribution()
+    academic_years = sorted({year for year, _ in enrollment_by_gender_and_year})
+    gender_totals = {
+        gender: sum(
+            count
+            for (_, record_gender), count in enrollment_by_gender_and_year.items()
+            if record_gender == gender
+        )
+        for gender in GENDER_ORDER
+    }
+    most_common_grade, most_common_grade_count = max(
+        grade_distribution.items(), key=lambda item: (item[1], -item[0])
+    )
+    largest_duration_group, largest_duration_count = max(
+        study_duration.items(), key=lambda item: item[1]
+    )
 
     return {
-        "summary": {"totalStudents": sum(study_duration.values())},
+        "summary": {
+            "totalStudents": sum(study_duration.values()),
+            "academicYears": {
+                "count": len(academic_years),
+                "first": academic_years[0],
+                "last": academic_years[-1],
+            },
+            "genderTotals": gender_totals,
+            "mostCommonGrade": {
+                "grade": most_common_grade,
+                "count": most_common_grade_count,
+            },
+            "largestStudyDurationGroup": {
+                "label": largest_duration_group,
+                "count": largest_duration_count,
+            },
+        },
         "gradeDistribution": [
             {"grade": grade, "count": count}
             for grade, count in grade_distribution.items()
