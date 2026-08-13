@@ -107,3 +107,21 @@ volume.
 distribution, enrollment-by-gender/year data, and study-duration distribution
 from `src.analytics`, which returns dictionaries of plain Python values.
 Database connection configuration remains isolated in `src.database`.
+
+## Frontend development
+
+The dashboard foundation uses Vite and vanilla JavaScript. It reads no live
+analytics values yet; future frontend work will consume the static
+`public/data/analytics.json` export.
+
+```bash
+npm install
+npm run dev
+```
+
+Create a production build or preview it locally with:
+
+```bash
+npm run build
+npm run preview
+```
