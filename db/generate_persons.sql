@@ -1,4 +1,4 @@
-use university;
+USE uni;
 
 Insert into PERSON (PERSONID,FIRSTNAME,LASTNAME,GENDER,DATEOFBIRTH) values (1,'Lyle','Ayala','M',str_to_date('23/03/1980','%d/%m/%Y'));
 Insert into PERSON (PERSONID,FIRSTNAME,LASTNAME,GENDER,DATEOFBIRTH) values (2,'Timothy','Allison','M',str_to_date('25/07/1986','%d/%m/%Y'));

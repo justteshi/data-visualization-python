@@ -1,65 +1,100 @@
 # University data visualizations
 
-This is the preserved baseline of a legacy Python 3.9 application. It reads
-university data from MySQL and uses Bokeh to produce three charts in
-`all_charts.html`.
+This legacy Python application reads university data from MySQL and uses Bokeh
+to generate three charts in `all_charts.html`.
 
 ## Repository layout
 
-- `all.py` connects to MySQL, queries the legacy schema, builds the charts, and
-  writes/opens the HTML output.
-- `all_charts.html` is generated output. It remains tracked for now because it
-  is the only viewable snapshot that does not require a configured database.
-- `db/scheme_creation.sql` defines the seven legacy tables.
-- `db/generate_*.sql` contains the seed data.
-- `requirements.txt` preserves the original pinned Python environment.
+- `all.py` is the Python entry point and Bokeh chart generator.
+- `database.py` loads `DB_*` environment variables and creates MySQL
+  connections.
+- `db/scheme_creation.sql` creates the seven legacy tables.
+- `db/generate_*.sql` contains the preserved seed data.
 
-## Database setup
+## Local Development
 
-The SQL files expect a MySQL database named `university`; they do not create
-the database. After creating that database, load the files in dependency order:
+The complete local development environment runs in Docker: MySQL runs in the
+`mysql` container and Python runs in the `python` container. Docker and Docker
+Compose are the only host-machine prerequisites; no local Python installation
+or Python dependencies are required.
 
-1. `db/scheme_creation.sql`
-2. `db/generate_persons.sql`
-3. `db/generate_students.sql`
-4. `db/generate_teachers.sql`
-5. `db/generate_classes.sql`
-6. `db/generate_rooms.sql`
-7. `db/generate_classes_students.sql`
-8. `db/generate_schedules.sql`
-
-Important: `all.py` currently connects to a database named `uni`, while the
-SQL files select `university`. This legacy mismatch is intentionally documented
-rather than changed in this baseline. The database names must refer to the same
-populated schema for the script to run.
-
-## Python setup
-
-Create and activate a Python 3.9 virtual environment:
+Start (or rebuild) the environment:
 
 ```bash
-python3.9 -m venv .venv
-source .venv/bin/activate
+docker compose up -d --build
 ```
 
-Install the preserved dependencies:
+Check service state. Wait until `mysql` is `healthy` before using the Python
+container:
 
 ```bash
-python -m pip install -r requirements.txt
+docker compose ps
 ```
 
-With MySQL running and the expected schema available, run:
+Run the existing Bokeh application. It regenerates `all_charts.html`, which is
+bind-mounted so the result is available on the host:
 
 ```bash
-python all.py
+docker compose exec python python all.py
 ```
 
-Bokeh writes `all_charts.html` and normally opens it in the default browser.
-Running the script regenerates that tracked file with data from the local
-database, so review its diff before committing it.
+Open a shell in the Python development container:
 
-## Baseline constraints
+```bash
+docker compose exec python sh
+```
 
-The current database access, SQL queries, Bokeh charts, and pinned dependency
-versions are deliberately unchanged. They should be tested against a populated
-database before later refactoring or dependency upgrades.
+Inspect the initialized database from the MySQL container:
+
+```bash
+docker compose exec mysql mysql -uapp -papp uni
+```
+
+Stop the containers while preserving the database volume:
+
+```bash
+docker compose down
+```
+
+Reset all local database data and re-run initialization:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+MySQL is reachable as `localhost:3306` from the host, but Docker services must
+use `mysql:3306`. The Python service receives the values in `.env.example`
+(`DB_HOST=mysql`, `DB_PORT=3306`, `DB_NAME=uni`, `DB_USER=app`,
+`DB_PASSWORD=app`) through Compose. Copy it to `.env` only when you need to
+override those local development defaults; `.env` is not committed. If a
+legacy `.env` already exists, replace it with the new example values or remove
+it so it does not override the Docker defaults.
+
+### Database initialization
+
+On an empty `mysql_data` volume, MySQL runs the existing SQL files through
+`/docker-entrypoint-initdb.d/` in this order:
+
+1. `scheme_creation.sql` (schema)
+2. `generate_persons.sql`
+3. `generate_students.sql`
+4. `generate_teachers.sql`
+5. `generate_classes.sql`
+6. `generate_rooms.sql`
+7. `generate_classes_students.sql`
+8. `generate_schedules.sql`
+
+The data files depend on the tables created first and on the previously loaded
+person, student, teacher, class, and room records. Their `USE university`
+directive was changed to `USE uni` so they load into the Compose database; no
+schema or seed records were changed. MySQL is started with
+`--lower-case-table-names=1` because this legacy schema and application use
+table names with inconsistent casing. Initialization scripts run only for a new
+volume.
+
+## Legacy constraints
+
+The Bokeh implementation and analytics queries are intentionally unchanged.
+`database.py` already uses environment-based configuration; no broader
+database configuration refactor is included in this feature.
